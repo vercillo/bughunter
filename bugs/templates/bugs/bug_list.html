@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BugHunter | Dashboard</title>
+</head>
+<body>
+    <h1>BugHunter</h1>
+    <p>Your bug tracking dashboard</p>
+
+    <p><a href="{% url 'bug_create' %}">+ Report a Bug</a></p>
+    
+    <h2>Reported Bugs</h2>
+
+    {% for bug in bugs %}
+        <div class="bug">
+            <h3>
+                <a href="{% url 'bug_detail' bug.id %}">{{bug.title}}</a>
+            </h3>
+            <p>{{bug.description}}</p>
+            <p class="meta">
+                Severity: {{bug.get_severity_display}} | Status: {{bug.get_status_display}}
+            </p>
+            <p class="meta">
+                Created: {{bug.created_at|date:"d M Y,H:i"}}
+            </p>
+        </div>
+        {% empty %}
+            <div class="empty">
+                <p>No bugs reported yet. Your dashboard is ready!</p>
+            </div>
+    {% endfor %}
+</body>
+</html>

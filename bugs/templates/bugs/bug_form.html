@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BugHunter | Report a Bug</title>
+
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #f4f6f9;
+            color: #222;
+        }
+
+        form{
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+        }
+
+        p{
+            margin-bottom: 18px;
+        }
+
+        label{
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input, textarea, select{
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        button{
+            background: #26354a;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        a{
+            color: #26354a;
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        {% if editing %}
+        Edit Bug
+        {% else %}
+        Report a Bug
+        {% endif %}
+    </h1>
+    <p>Provide the detailes of the issue below</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{form.as_p}}
+
+        <button type="submit">
+            {% if editing %}
+            Save Changes
+            {% else %}
+            Submit Bug
+            {% endif %}
+        </button>
+    </form>
+
+    <p><a href="{% url 'bug_list' %}">Back to dashboard</a></p>
+</body>
+</html>

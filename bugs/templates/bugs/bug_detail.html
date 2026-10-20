@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BugHunter | {{ bug.title }}</title>
+
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            max-width: 800px;
+            margin: 40px;
+            padding: 0 20px;
+            background: #f4f6f9;
+            color: #222;
+        }
+
+        .card{
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .meta{
+            color: #555;
+            margin: 12px 0;
+        }
+
+        .button{
+            display: inline-block;
+            background: #26354a;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bug Details</h1>
+
+    <div class="card">
+        <h2>{{bug.title}}</h2>
+        
+        <p>{{bug.description|linebreaksbr}}</p>
+        
+        <p class="meta">
+            Severity: {{bug.get_severity_display}}
+        </p>
+
+        <p class="meta">
+            Status: {{bug.get_status_display}}
+        </p>
+
+        <p class="meta">
+            Created: {{bug.created_at|date:'d M Y, H:i'}}
+        </p>
+
+        <a class="button" href="{% url 'bug_edit' bug.id %}">
+            Edit Bug
+        </a>
+
+        <a href="{% url 'bug_list' %}">Back to dashboard</a>
+    </div>
+</body>
+</html>
