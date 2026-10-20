@@ -1,80 +1,212 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BugHunter | Report a Bug</title>
+    <title>
+        BugHunter |
+        {% if editing %}Edit Bug{% else %}Report a Bug{% endif %}
+    </title>
 
     <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-            max-width: 700px;
-            margin: 40px auto;
-            padding: 0 20px;
-            background: #f4f6f9;
-            color: #222;
-        }
-
-        form{
-            background: white;
-            padding: 24px;
-            border-radius: 8px;
-        }
-
-        p{
-            margin-bottom: 18px;
-        }
-
-        label{
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
-
-        input, textarea, select{
-            width: 100%;
-            padding: 10px;
+        * {
             box-sizing: border-box;
         }
 
-        button{
-            background: #26354a;
-            color: white;
-            padding: 12px 20px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: #f5f7fb;
+            color: #172b4d;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #526987;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            color: #1769f5;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin: 0 0 28px;
+            line-height: 1.6;
+        }
+
+        .form-card {
+            background: white;
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(23, 43, 77, 0.04);
+        }
+
+        form p {
+            margin: 0 0 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d7dfeb;
+            border-radius: 8px;
+            background: white;
+            color: #172b4d;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #1769f5;
+            box-shadow: 0 0 0 3px rgba(23, 105, 245, 0.12);
+        }
+
+        textarea {
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .helptext {
+            display: block;
+            margin-top: 6px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .errorlist {
+            color: #b91c1c;
+            background: #fef2f2;
+            border-radius: 6px;
+            padding: 10px 10px 10px 28px;
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 18px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
             cursor: pointer;
         }
 
-        a{
-            color: #26354a;
+        .button-primary {
+            background: #1769f5;
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: #0d55ce;
+        }
+
+        .button-secondary {
+            background: #eef2f7;
+            color: #334155;
+        }
+
+        .button-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            .form-card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <h1>
-        {% if editing %}
-        Edit Bug
-        {% else %}
-        Report a Bug
-        {% endif %}
-    </h1>
-    <p>Provide the detailes of the issue below</p>
+    <main class="container">
+        <a class="back-link" href="{% url 'bug_list' %}">
+            ← Back to dashboard
+        </a>
 
-    <form method="post">
-        {% csrf_token %}
-
-        {{form.as_p}}
-
-        <button type="submit">
+        <h1>
             {% if editing %}
-            Save Changes
+                Edit Bug
             {% else %}
-            Submit Bug
+                Report a Bug
             {% endif %}
-        </button>
-    </form>
+        </h1>
 
-    <p><a href="{% url 'bug_list' %}">Back to dashboard</a></p>
+        <p class="subtitle">
+            {% if editing %}
+                Update the bug report details below.
+            {% else %}
+                Provide the details of the issue so it can be investigated.
+            {% endif %}
+        </p>
+
+        <section class="form-card">
+            <form method="post">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <div class="actions">
+                    <button class="button button-primary" type="submit">
+                        {% if editing %}
+                            Save Changes
+                        {% else %}
+                            Submit Bug
+                        {% endif %}
+                    </button>
+
+                    <a class="button button-secondary"
+                       href="{% url 'bug_list' %}">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </section>
+    </main>
 </body>
 </html>

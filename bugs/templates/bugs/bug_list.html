@@ -1,35 +1,226 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BugHunter | Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f7fb;
+            color: #172b4d;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+        }
+
+        .report-link {
+            display: inline-block;
+            margin: 16px 0;
+            padding: 12px 18px;
+            background-color: #1769f5;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .report-link:hover {
+            background-color: #0d55ce;
+        }
+
+        .filters-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 24px 0;
+            align-items: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .filters-form input,
+        .filters-form select {
+            padding: 12px 14px;
+            border: 1px solid #d7dfeb;
+            border-radius: 8px;
+            background: white;
+            color: #172b4d;
+            font-size: 14px;
+        }
+
+        .filters-form input {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .filters-form button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #1769f5;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .filters-form button:hover {
+            background: #0d55ce;
+        }
+
+        .filters-form a {
+            color: #526987;
+            text-decoration: none;
+        }
+
+        .filters-form a:hover {
+            text-decoration: underline;
+        }
+
+        .bug {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .bug h3 {
+            margin-top: 0;
+        }
+
+        .bug h3 a {
+            color: #1769f5;
+            text-decoration: none;
+        }
+
+        .bug h3 a:hover {
+            text-decoration: underline;
+        }
+
+        .meta {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .empty {
+            background-color: white;
+            padding: 24px;
+            border-radius: 12px;
+            color: #64748b;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin: 20px;
+            }
+
+            .filters-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filters-form input {
+                min-width: 0;
+            }
+        }
+    </style>
 </head>
+
 <body>
     <h1>BugHunter</h1>
-    <p>Your bug tracking dashboard</p>
+    <p class="subtitle">Your bug tracking dashboard</p>
 
-    <p><a href="{% url 'bug_create' %}">+ Report a Bug</a></p>
-    
-    <h2>Reported Bugs</h2>
+    <p>
+        <a class="report-link" href="{% url 'bug_create' %}">
+            + Report a Bug
+        </a>
+    </p>
+
+    <form method="GET" action="{% url 'bug_list' %}" class="filters-form">
+        <input
+            type="text"
+            name="q"
+            placeholder="Search by title or description..."
+            value="{{ search_query }}"
+        >
+
+        <select name="severity">
+            <option value="">All severities</option>
+            <option value="critical" {% if selected_severity == "critical" %}selected{% endif %}>Critical</option>
+            <option value="high" {% if selected_severity == "high" %}selected{% endif %}>High</option>
+            <option value="medium" {% if selected_severity == "medium" %}selected{% endif %}>Medium</option>
+            <option value="low" {% if selected_severity == "low" %}selected{% endif %}>Low</option>
+        </select>
+
+        <select name="status">
+            <option value="">All statuses</option>
+            <option value="open" {% if selected_status == "open" %}selected{% endif %}>Open</option>
+            <option value="in_progress" {% if selected_status == "in_progress" %}selected{% endif %}>In Progress</option>
+            <option value="fixed" {% if selected_status == "fixed" %}selected{% endif %}>Fixed</option>
+            <option value="retest" {% if selected_status == "retest" %}selected{% endif %}>Retest</option>
+            <option value="closed" {% if selected_status == "closed" %}selected{% endif %}>Closed</option>
+        </select>
+
+        <select name="sort">
+            <option value="newest">
+                {% if selected_sort == "newest" %}
+                selected
+                {% endif %}
+                Newest first
+            </option>
+            <option value="oldest">
+                {% if selected_sort == "oldest" %}
+                selected
+                {% endif %}
+                Oldest first
+            </option>
+            <option value="severity">
+                {% if selected_sort == "severity" %}
+                selected
+                {% endif %}
+                Severity
+            </option>
+        </select>
+
+        <button type="submit">Search / Filter</button>
+
+        <a href="{% url 'bug_list' %}">Clear filters</a>
+    </form>
+
+    <h2>Reported Bugs ({{ bug_count }})</h2>
 
     {% for bug in bugs %}
         <div class="bug">
             <h3>
-                <a href="{% url 'bug_detail' bug.id %}">{{bug.title}}</a>
+                <a href="{% url 'bug_detail' bug.id %}">{{ bug.title }}</a>
             </h3>
-            <p>{{bug.description}}</p>
+
+            <p>{{ bug.description }}</p>
+
             <p class="meta">
-                Severity: {{bug.get_severity_display}} | Status: {{bug.get_status_display}}
+                Severity: {{ bug.get_severity_display }} |
+                Status: {{ bug.get_status_display }}
             </p>
+
             <p class="meta">
-                Created: {{bug.created_at|date:"d M Y,H:i"}}
+                Created: {{ bug.created_at|date:"d M Y, H:i" }}
             </p>
         </div>
-        {% empty %}
-            <div class="empty">
-                <p>No bugs reported yet. Your dashboard is ready!</p>
-            </div>
+    {% empty %}
+        <div class="empty">
+            <p>No bugs match your search. Try changing your filters or reporting a new bug!</p>
+        </div>
     {% endfor %}
 </body>
 </html>

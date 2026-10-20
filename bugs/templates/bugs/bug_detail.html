@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,63 +7,229 @@
     <title>BugHunter | {{ bug.title }}</title>
 
     <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-            max-width: 800px;
-            margin: 40px;
-            padding: 0 20px;
-            background: #f4f6f9;
-            color: #222;
+        * {
+            box-sizing: border-box;
         }
 
-        .card{
-            background: white;
-            padding: 24px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: #f5f7fb;
+            color: #172b4d;
         }
 
-        .meta{
-            color: #555;
-            margin: 12px 0;
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
         }
 
-        .button{
+        .back-link {
             display: inline-block;
-            background: #26354a;
-            color: white;
+            margin-bottom: 24px;
+            color: #526987;
             text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 5px;
-            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            color: #1769f5;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .card {
+            background: white;
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(23, 43, 77, 0.04);
+        }
+
+        .bug-title {
+            margin: 0 0 24px;
+            font-size: 24px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .severity-critical {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .severity-high {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .severity-medium {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .severity-low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-badge {
+            background: #e8efff;
+            color: #1d4ed8;
+        }
+
+        .section-title {
+            margin: 0 0 12px;
+            font-size: 16px;
+        }
+
+        .description {
+            color: #475569;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .divider {
+            border: 0;
+            border-top: 1px solid #e2e8f0;
+            margin: 28px 0;
+        }
+
+        .created {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .button-primary {
+            background: #1769f5;
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: #0d55ce;
+        }
+
+        .button-secondary {
+            background: #eef2f7;
+            color: #334155;
+        }
+
+        .button-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+            .bug-title {
+                font-size: 21px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <h1>Bug Details</h1>
-
-    <div class="card">
-        <h2>{{bug.title}}</h2>
-        
-        <p>{{bug.description|linebreaksbr}}</p>
-        
-        <p class="meta">
-            Severity: {{bug.get_severity_display}}
-        </p>
-
-        <p class="meta">
-            Status: {{bug.get_status_display}}
-        </p>
-
-        <p class="meta">
-            Created: {{bug.created_at|date:'d M Y, H:i'}}
-        </p>
-
-        <a class="button" href="{% url 'bug_edit' bug.id %}">
-            Edit Bug
+    <main class="container">
+        <a class="back-link" href="{% url 'bug_list' %}">
+            ← Back to dashboard
         </a>
 
-        <a href="{% url 'bug_list' %}">Back to dashboard</a>
-    </div>
+        <header class="page-header">
+            <h1>Bug Details</h1>
+            <p class="subtitle">Review the report and track its progress.</p>
+        </header>
+
+        <section class="card">
+            <h2 class="bug-title">{{ bug.title }}</h2>
+
+            <div class="badges">
+                <span class="badge severity-{{ bug.severity }}">
+                    {{ bug.get_severity_display }} Severity
+                </span>
+
+                <span class="badge status-badge">
+                    {{ bug.get_status_display }}
+                </span>
+            </div>
+
+            <h3 class="section-title">Description</h3>
+
+            <div class="description">
+                {{ bug.description|linebreaksbr }}
+            </div>
+
+            <hr class="divider">
+
+            <p class="created">
+                Reported on {{ bug.created_at|date:"d M Y, H:i" }}
+            </p>
+
+            <div class="actions">
+                <a class="button button-primary"
+                   href="{% url 'bug_edit' bug.id %}">
+                    Edit Bug
+                </a>
+
+                <a class="button button-secondary"
+                   href="{% url 'bug_list' %}">
+                    Back to Dashboard
+                </a>
+            </div>
+        </section>
+    </main>
 </body>
 </html>
