@@ -1,11 +1,24 @@
 from django.contrib import admin
 from django.urls import path
-from bugs.views import *
+from django.contrib.auth import views as auth_views
+from bugs import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', bug_list, name='bug_list'),
-    path('bugs/new/', bug_create, name='bug_create'),
-    path('bugs/<int:bug_id>/detail', bug_detail, name='bug_detail'),
-    path('bugs/<int:bug_id>/edit/', bug_edit, name='bug_edit'),
+    path('', views.landing, name='landing'),
+    path('dashboard/', views.bug_list, name='bug_list'),
+    path('my-bugs/', views.my_bugs, name='my_bugs'),
+    path('bugs/new/', views.bug_create, name='bug_create'),
+    path('bugs/<int:bug_id>/detail/', views.bug_detail, name='bug_detail'),
+    path('bugs/<int:bug_id>/edit/', views.bug_edit, name='bug_edit'),
+    path('register/', views.register, name='register'),
+    path(
+        'login/',
+        auth_views.LoginView.as_view(
+            template_name='bugs/login.html',
+            next_page='bug_list',
+        ),
+        name='login',
+    ),
+    path('logout/', auth_views.LogoutView.as_view(next_page='landing'), name='logout'),
 ]

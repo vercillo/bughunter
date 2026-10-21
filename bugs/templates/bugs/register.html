@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | BugHunter</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background: #f3f6fb;
+            font-family: Arial, sans-serif;
+            color: #17233d;
+        }
+
+        .card {
+            width: min(420px, calc(100% - 40px));
+            box-sizing: border-box;
+            padding: 32px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(20, 35, 65, 0.08);
+        }
+
+        h1 { margin-top: 0; }
+        p { color: #68758b; }
+
+        label {
+            display: block;
+            margin: 16px 0 6px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #d8dfeb;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 12px;
+            border: 0;
+            border-radius: 8px;
+            background: #316bfa;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .errors { color: #c62828; font-size: 14px; }
+        .bottom { margin-top: 20px; font-size: 14px; }
+        a { color: #316bfa; }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <h1>Create your account</h1>
+        <p>Join BugHunter to report and track bugs.</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="errors">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+
+                {% if field.errors %}
+                    <div class="errors">{{ field.errors }}</div>
+                {% endif %}
+
+                {% if field.help_text %}
+                    <p>{{ field.help_text }}</p>
+                {% endif %}
+            {% endfor %}
+
+            <button type="submit">Create account</button>
+        </form>
+
+        <div class="bottom">
+            Already have an account?
+            <a href="{% url 'login' %}">Log in</a>
+        </div>
+    </main>
+</body>
+</html>
