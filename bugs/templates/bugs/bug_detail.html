@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -197,9 +197,11 @@
             <h2 class="bug-title">{{ bug.title }}</h2>
 
             <div class="badges">
+                {% if is_staff_user %}
                 <span class="badge severity-{{ bug.severity }}">
                     {{ bug.get_severity_display }} Severity
                 </span>
+                {% endif %}
 
                 <span class="badge status-badge">
                     {{ bug.get_status_display }}
@@ -219,17 +221,22 @@
             </p>
 
             <div class="actions">
-                <a class="button button-primary"
-                   href="{% url 'bug_edit' bug.id %}">
+                <a class="button button-primary" href="{% url 'bug_edit' bug.id %}">
                     Edit Bug
                 </a>
 
-                <a class="button button-secondary"
-                   href="{% url 'bug_list' %}">
+                {% if is_staff_user %}
+                <a class="button button-secondary" href="{% url 'assign_bug' bug.id %}">
+                    Assign to
+                </a>
+                {% endif %}
+
+                <a class="button button-secondary" href="{% url 'bug_list' %}">
                     Back to Dashboard
                 </a>
             </div>
         </section>
     </main>
 </body>
+
 </html>
