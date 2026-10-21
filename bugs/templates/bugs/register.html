@@ -1,96 +1,284 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account | BugHunter</title>
+
+    <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             min-height: 100vh;
-            display: grid;
-            place-items: center;
-            background: #f3f6fb;
-            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 18px;
+            background:
+                radial-gradient(ellipse at top left, #e0eaff 0%, transparent 45%),
+                #f5f7fc;
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", sans-serif;
             color: #17233d;
         }
 
-        .card {
-            width: min(420px, calc(100% - 40px));
-            box-sizing: border-box;
-            padding: 32px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 12px 40px rgba(20, 35, 65, 0.08);
-        }
-
-        h1 { margin-top: 0; }
-        p { color: #68758b; }
-
-        label {
-            display: block;
-            margin: 16px 0 6px;
-            font-weight: 600;
-        }
-
-        input {
+        .register-wrapper {
             width: 100%;
-            box-sizing: border-box;
-            padding: 11px;
-            border: 1px solid #d8dfeb;
-            border-radius: 8px;
+            max-width: 460px;
         }
 
-        button {
-            width: 100%;
-            margin-top: 22px;
-            padding: 12px;
-            border: 0;
-            border-radius: 8px;
-            background: #316bfa;
-            color: white;
-            font-weight: bold;
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            margin-bottom: 26px;
+            text-decoration: none;
             cursor: pointer;
         }
 
-        .errors { color: #c62828; font-size: 14px; }
-        .bottom { margin-top: 20px; font-size: 14px; }
-        a { color: #316bfa; }
+        .brand:hover{
+            text-decoration: none;
+        }
+
+        .brand:hover .brand-name{
+            color: #316bfa;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: #101b35;
+            color: white;
+            font-size: 23px;
+            box-shadow: 0 6px 16px rgba(49, 107, 250, 0.25);
+        }
+
+        .brand-name {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #101b35;
+        }
+
+        .card {
+            padding: 38px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #e8edf5;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(28, 46, 85, 0.09);
+        }
+
+        .eyebrow {
+            margin-bottom: 10px;
+            color: #316bfa;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 29px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            margin: 12px 0 28px;
+            color: #78849a;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        form p {
+            color: #78849a;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        form label {
+            display: block;
+            margin: 19px 0 8px;
+            color: #34415a;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        form input {
+            display: block;
+            width: 100%;
+            min-height: 46px;
+            padding: 12px 14px;
+            border: 1px solid #dce3ef;
+            border-radius: 10px;
+            outline: none;
+            background: #fbfcff;
+            color: #17233d;
+            font: inherit;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        form input:focus {
+            border-color: #477cff;
+            box-shadow: 0 0 0 4px rgba(49, 107, 250, 0.10);
+            background: white;
+        }
+
+        form input::placeholder {
+            color: #a3aec0;
+        }
+
+        .errors {
+            margin-top: 7px;
+            color: #c62828;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .errors ul {
+            margin: 5px 0;
+            padding-left: 18px;
+        }
+
+        .form-error {
+            padding: 12px 14px;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            background: #fff1f2;
+            color: #b42318;
+            font-size: 13px;
+        }
+
+        .submit-button {
+            width: 100%;
+            min-height: 48px;
+            margin-top: 26px;
+            border: 0;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #477cff, #3161e8);
+            color: white;
+            font-size: 14px;
+            font-weight: 750;
+            cursor: pointer;
+            box-shadow: 0 7px 16px rgba(49, 107, 250, 0.20);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(49, 107, 250, 0.28);
+        }
+
+        .bottom {
+            margin-top: 25px;
+            text-align: center;
+            color: #78849a;
+            font-size: 13px;
+        }
+
+        a {
+            color: #316bfa;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 22px;
+            text-align: center;
+            color: #9aa5b7;
+            font-size: 11px;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 27px 22px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <main class="card">
-        <h1>Create your account</h1>
-        <p>Join BugHunter to report and track bugs.</p>
+    <main class="register-wrapper">
 
-        <form method="post">
-            {% csrf_token %}
+        <a href="{% url 'landing' %}" class="brand">
+            <span class="brand-icon">
+                <i class="bi bi-bug-fill" aria-hidden="true"></i>
+            </span>
+            <div class="brand-name">BugHunter</div>
+        </a>
 
-            {% if form.non_field_errors %}
-                <div class="errors">{{ form.non_field_errors }}</div>
-            {% endif %}
+        <section class="card">
+            <div class="eyebrow">Get started</div>
+            <h1>Create your account</h1>
+            <p class="subtitle">
+                Join BugHunter and help your team squash bugs faster.
+            </p>
 
-            {% for field in form %}
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
+            <form method="post">
+                {% csrf_token %}
 
-                {% if field.errors %}
-                    <div class="errors">{{ field.errors }}</div>
+                {% if form.non_field_errors %}
+                    <div class="form-error">
+                        {{ form.non_field_errors }}
+                    </div>
                 {% endif %}
 
-                {% if field.help_text %}
-                    <p>{{ field.help_text }}</p>
-                {% endif %}
-            {% endfor %}
+                {% for field in form %}
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
 
-            <button type="submit">Create account</button>
-        </form>
+                    {{ field }}
 
-        <div class="bottom">
-            Already have an account?
-            <a href="{% url 'login' %}">Log in</a>
+                    {% if field.errors %}
+                        <div class="errors">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <div class="errors" style="color: #78849a;">
+                            {{ field.help_text|safe }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <button class="submit-button" type="submit">
+                    Create account →
+                </button>
+            </form>
+
+            <div class="bottom">
+                Already have an account?
+                <a href="{% url 'login' %}">Log in</a>
+            </div>
+        </section>
+
+        <div class="footer">
+            BugHunter · Find it. Track it. Fix it.
         </div>
+
     </main>
 </body>
 </html>

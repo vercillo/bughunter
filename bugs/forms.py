@@ -2,8 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.db.models import Q
-
-from .models import Bug
+from .models import Bug, Comment
 
 
 class BugForm(forms.ModelForm):
@@ -74,3 +73,15 @@ class RegistrationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Write a comment..',
+            }),
+        }

@@ -5,12 +5,13 @@ from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .models import Bug
+from .models import Bug, Comment
 from .forms import (
     BugForm,
     BugAssignmentForm,
     RegistrationForm,
     TechBugEditForm,
+    CommentForm,
 )
 
 
@@ -126,9 +127,25 @@ def bug_detail(request, bug_id):
     bug = get_object_or_404(Bug, id=bug_id)
     staff_user = is_staff_user(request.user)
 
-    # Regular users cannot view other people's reports, even by URL.
+    # Regular users can only view their own bug reports.
     if not staff_user and bug.reported_by_id != request.user.id:
         raise Http404
+
+    # Process a new comment.
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.bug = bug
+            comment.author = request.user
+            comment.save()
+
+            return redirect("bug_detail", bug_id=bug.id)
+    else:
+        form = CommentForm()
+
+    comments = bug.comments.select_related("author").all()
 
     return render(
         request,
@@ -136,6 +153,8 @@ def bug_detail(request, bug_id):
         {
             "bug": bug,
             "is_staff_user": staff_user,
+            "comments": comments,
+            "comment_form": form,
         },
     )
 
