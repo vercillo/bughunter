@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Tech Staff | BugHunter</title>
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 18px;
+            background:
+                radial-gradient(ellipse at top left, #e0eaff 0%, transparent 45%),
+                #f5f7fc;
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", sans-serif;
+            color: #17233d;
+        }
+
+        .register-wrapper {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            margin-bottom: 26px;
+            text-decoration: none;
+        }
+
+        .brand:hover {
+            text-decoration: none;
+        }
+
+        .brand:hover .brand-name {
+            color: #316bfa;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: #101b35;
+            color: white;
+            font-size: 23px;
+            box-shadow: 0 6px 16px rgba(49, 107, 250, 0.25);
+        }
+
+        .brand-name {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #101b35;
+            transition: color 0.2s;
+        }
+
+        .card {
+            padding: 38px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #e8edf5;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(28, 46, 85, 0.09);
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 10px;
+            color: #316bfa;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 29px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            margin: 12px 0 28px;
+            color: #78849a;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        form p {
+            margin: 0 0 19px;
+            color: #78849a;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        form label {
+            display: block;
+            margin: 19px 0 8px;
+            color: #34415a;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        form input {
+            display: block;
+            width: 100%;
+            min-height: 46px;
+            padding: 12px 14px;
+            border: 1px solid #dce3ef;
+            border-radius: 10px;
+            outline: none;
+            background: #fbfcff;
+            color: #17233d;
+            font: inherit;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        form input:focus {
+            border-color: #477cff;
+            box-shadow: 0 0 0 4px rgba(49, 107, 250, 0.10);
+            background: white;
+        }
+
+        form input::placeholder {
+            color: #a3aec0;
+        }
+
+        .errors {
+            margin-top: 7px;
+            color: #c62828;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .errors ul {
+            margin: 5px 0;
+            padding-left: 18px;
+        }
+
+        .form-error {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            background: #fff1f2;
+            color: #b42318;
+            font-size: 13px;
+        }
+
+        .help-text {
+            margin-top: 7px;
+            color: #78849a;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .help-text ul {
+            margin: 5px 0;
+            padding-left: 18px;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 26px;
+        }
+
+        .submit-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            width: 100%;
+            min-height: 48px;
+            border: 0;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #477cff, #3161e8);
+            color: white;
+            font-size: 14px;
+            font-weight: 750;
+            cursor: pointer;
+            box-shadow: 0 7px 16px rgba(49, 107, 250, 0.20);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(49, 107, 250, 0.28);
+        }
+
+        .cancel-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            min-height: 46px;
+            padding: 12px 14px;
+            border: 1px solid #e1e7f0;
+            border-radius: 10px;
+            background: #f8faff;
+            color: #52617a;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .cancel-button:hover {
+            background: #eef3fc;
+            border-color: #cbd7ec;
+            text-decoration: none;
+        }
+
+        a {
+            color: #316bfa;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .bottom {
+            margin-top: 23px;
+            text-align: center;
+            color: #78849a;
+            font-size: 12px;
+        }
+
+        .footer {
+            margin-top: 22px;
+            text-align: center;
+            color: #9aa5b7;
+            font-size: 11px;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 27px 22px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="register-wrapper">
+
+
+        <section class="card">
+            <div class="eyebrow">
+                <i class="bi bi-shield-check" aria-hidden="true"></i>
+                Team management
+            </div>
+
+            <h1>Add Tech Staff</h1>
+
+            <p class="subtitle">
+                Create an account for a team member who needs to investigate,
+                assign, and update bug reports.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="form-error">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="errors">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <div class="help-text">
+                            {{ field.help_text|safe }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <div class="actions">
+                    <button class="submit-button" type="submit">
+                        <i class="bi bi-person-plus" aria-hidden="true"></i>
+                        Create Tech Account
+                    </button>
+
+                    <a class="cancel-button" href="{% url 'bug_list' %}">
+                        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </form>
+        </section>
+
+        <div class="footer">
+            BugHunter · Find it. Track it. Fix it.
+        </div>
+
+    </main>
+</body>
+</html>

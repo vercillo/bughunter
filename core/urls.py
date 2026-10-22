@@ -1,6 +1,7 @@
+
 from django.contrib import admin
-from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.urls import path
 
 from bugs import views
 
@@ -17,6 +18,9 @@ urlpatterns = [
     path("bugs/<int:bug_id>/detail/", views.bug_detail, name="bug_detail"),
     path("bugs/<int:bug_id>/edit/", views.bug_edit, name="bug_edit"),
     path("bugs/<int:bug_id>/assign/", views.assign_bug, name="assign_bug"),
+    path("bugs/<int:bug_id>/delete/", views.bug_delete, name="bug_delete"),
+
+    path("tech-staff/add/", views.add_tech_staff, name="add_tech_staff"),
 
     path("register/", views.register, name="register"),
 

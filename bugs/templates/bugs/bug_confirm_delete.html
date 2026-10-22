@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BugHunter | Delete Bug</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background: #f4f7fc;
+            color: #172b4d;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 32px;
+            background: white;
+            border: 1px solid #e2eaf5;
+            border-radius: 14px;
+            box-shadow: 0 8px 28px rgba(23, 43, 77, 0.06);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 26px;
+        }
+
+        p {
+            color: #526987;
+            line-height: 1.7;
+        }
+
+        .bug-title {
+            color: #172b4d;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .button-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .button-danger:hover {
+            background: #b91c1c;
+        }
+
+        .button-secondary {
+            background: #eef2f7;
+            color: #334155;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <h1>Delete bug report?</h1>
+
+        <p>
+            You're about to permanently delete
+            <span class="bug-title">"{{ bug.title }}"</span>.
+        </p>
+
+        <p>This action cannot be undone. Its comments will also be deleted.</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="actions">
+                <button class="button button-danger" type="submit">
+                    Yes, delete bug
+                </button>
+
+                <a class="button button-secondary"
+                   href="{% url 'bug_detail' bug.id %}">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

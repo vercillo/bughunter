@@ -14,7 +14,6 @@ class Bug(models.Model):
     STATUS_CHOICES = [
         ("open", "Open"),
         ("in_progress", "In Progress"),
-        ("fixed", "Fixed"),
         ("retest", "Retest"),
         ("closed", "Closed"),
     ]

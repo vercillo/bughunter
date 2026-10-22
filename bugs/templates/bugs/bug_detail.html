@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BugHunter | {{ bug.title }}</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <style>
         :root {
@@ -38,7 +38,8 @@
             text-decoration: none;
         }
 
-        button, textarea {
+        button,
+        textarea {
             font: inherit;
         }
 
@@ -303,7 +304,8 @@
             align-items: start;
         }
 
-        .left-column, .right-column {
+        .left-column,
+        .right-column {
             min-width: 0;
         }
 
@@ -689,7 +691,7 @@
         <div class="topbar-spacer"></div>
 
         <div class="user-pill">
-                <i class="bi bi-person-circle" aria-hidden="true"></i>
+            <i class="bi bi-person-circle" aria-hidden="true"></i>
             <span class="user-name">{{ request.user.username }}</span>
         </div>
     </nav>
@@ -713,10 +715,10 @@
                         </span>
 
                         {% if is_staff_user %}
-                            <span class="badge severity-{{ bug.severity }}">
-                                <span class="badge-dot"></span>
-                                {{ bug.get_severity_display }} severity
-                            </span>
+                        <span class="badge severity-{{ bug.severity }}">
+                            <span class="badge-dot"></span>
+                            {{ bug.get_severity_display }} severity
+                        </span>
                         {% endif %}
                     </div>
 
@@ -734,18 +736,25 @@
                 </div>
 
                 <div class="actions">
-                    <a class="button button-primary"
-                       href="{% url 'bug_edit' bug.id %}">
-                        <i class="bi bi-pencil-square" aria-hidden="true"></i>
-                         Edit Bug
-                    </a>
+                    {% if is_staff_user or is_superuser %}
+                        <a class="button button-primary" href="{% url 'bug_edit' bug.id %}">
+                            <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                            Edit Bug
+                        </a>
+                    {% endif %}
 
                     {% if is_staff_user %}
-                        <a class="button button-secondary"
-                           href="{% url 'assign_bug' bug.id %}">
-                            <i class="bi bi-person-plus" aria-hidden="true"></i>
-                             Assign to
-                        </a>
+                    <a class="button button-secondary" href="{% url 'assign_bug' bug.id %}">
+                        <i class="bi bi-person-plus" aria-hidden="true"></i>
+                        Assign to
+                    </a>
+                    {% endif %}
+
+                    {% if is_superuser %}
+                    <a class="button button-secondary" href="{% url 'bug_delete' bug.id %}">
+                        <i class="bi bi-trash" aria-hidden="true"></i>
+                        Delete Bug
+                    </a>
                     {% endif %}
 
                 </div>
@@ -774,72 +783,68 @@
                             <span class="comment-count">
                                 {{ comments|length }}
                                 {% if comments|length == 1 %}
-                                    comment
+                                comment
                                 {% else %}
-                                    comments
+                                comments
                                 {% endif %}
                             </span>
                         </div>
 
                         {% if comments %}
-                            <div class="comment-list">
-                                {% for comment in comments %}
-                                    <article class="comment">
-                                        <div class="comment-avatar">
-                                            {{ comment.author.username|first|upper }}
-                                        </div>
+                        <div class="comment-list">
+                            {% for comment in comments %}
+                            <article class="comment">
+                                <div class="comment-avatar">
+                                    {{ comment.author.username|first|upper }}
+                                </div>
 
-                                        <div class="comment-main">
-                                            <div class="comment-meta">
-                                                <span class="comment-author">
-                                                    {{ comment.author.username }}
-                                                </span>
+                                <div class="comment-main">
+                                    <div class="comment-meta">
+                                        <span class="comment-author">
+                                            {{ comment.author.username }}
+                                        </span>
 
-                                                {% if comment.author.is_superuser or comment.author.groups.all %}
-                                                    {% if comment.author.is_superuser or comment.author.groups.all.0.name == "Tech Team" %}
-                                                        <span class="role-badge">Tech Team</span>
-                                                    {% endif %}
-                                                {% endif %}
+                                        {% if comment.author.is_superuser or comment.author.id in tech_user_ids %}
+                                        <span class="role-badge">Tech Team</span>
+                                        {% endif %}
 
-                                                <time class="comment-date"
-                                                      datetime="{{ comment.created_at|date:'c' }}">
-                                                    {{ comment.created_at|date:"d M Y, H:i" }}
-                                                </time>
-                                            </div>
+                                        <time class="comment-date" datetime="{{ comment.created_at|date:'c' }}">
+                                            {{ comment.created_at|date:"d M Y, H:i" }}
+                                        </time>
+                                    </div>
 
-                                            <div class="comment-bubble">
-                                                {{ comment.content|linebreaksbr }}
-                                            </div>
-                                        </div>
-                                    </article>
-                                {% endfor %}
-                            </div>
+                                    <div class="comment-bubble">
+                                        {{ comment.content|linebreaksbr }}
+                                    </div>
+                                </div>
+                            </article>
+                            {% endfor %}
+                        </div>
                         {% else %}
-                            <div class="empty-comments">
-                                <i class="bi bi-chat-square-text" aria-hidden="true"></i>
-                                <strong>No comments yet</strong>
-                                <p>Start the conversation about this bug.</p>
-                            </div>
+                        <div class="empty-comments">
+                            <i class="bi bi-chat-square-text" aria-hidden="true"></i>
+                            <strong>No comments yet</strong>
+                            <p>Start the conversation about this bug.</p>
+                        </div>
                         {% endif %}
 
                         <form class="comment-form" method="post">
                             {% csrf_token %}
 
-                            <label class="form-heading"
-                                   for="{{ comment_form.content.id_for_label }}">
+                            <label class="form-heading" for="{{ comment_form.content.id_for_label }}">
                                 Write a comment
                             </label>
 
                             {% if comment_form.content.errors %}
-                                <div class="form-errors">
-                                    {{ comment_form.content.errors }}
-                                </div>
+                            <div class="form-errors">
+                                {{ comment_form.content.errors }}
+                            </div>
                             {% endif %}
 
                             {% if comment_form.non_field_errors %}
-                                <div class="form-errors">
-                                    {{ comment_form.non_field_errors }}
-                                </div>
+                            <div class="form-errors">
+                                {{ comment_form.non_field_errors }}
+                            </div>
                             {% endif %}
 
                             {{ comment_form.content }}
@@ -847,7 +852,7 @@
                             <div class="form-footer">
                                 <button class="button button-primary" type="submit">
                                     <i class="bi bi-send-fill" aria-hidden="true"></i>
-                                     Post comment
+                                    Post comment
                                 </button>
                             </div>
                         </form>
@@ -859,16 +864,16 @@
                         <h2 class="panel-title">Bug information</h2>
 
                         {% if is_staff_user %}
-                            <div class="property">
-                                <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
-                                <div>
-                                    <div class="property-label">Severity</div>
-                                    <div class="property-value">
-                                        <span class="mini-dot severity-{{ bug.severity }}"></span>
-                                        {{ bug.get_severity_display }}
-                                    </div>
+                        <div class="property">
+                            <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+                            <div>
+                                <div class="property-label">Severity</div>
+                                <div class="property-value">
+                                    <span class="mini-dot severity-{{ bug.severity }}"></span>
+                                    {{ bug.get_severity_display }}
                                 </div>
                             </div>
+                        </div>
                         {% endif %}
 
                         <div class="property">
@@ -887,9 +892,9 @@
                                 <div class="property-label">Assignee</div>
                                 <div class="property-value">
                                     {% if bug.assigned_to %}
-                                        {{ bug.assigned_to.username }}
+                                    {{ bug.assigned_to.username }}
                                     {% else %}
-                                        Not assigned
+                                    Not assigned
                                     {% endif %}
                                 </div>
                             </div>
@@ -925,4 +930,5 @@
         <span>Better software, together.</span>
     </footer>
 </body>
+
 </html>
